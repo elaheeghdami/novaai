@@ -4,8 +4,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Vazirmatn', 'Inter', 'system-ui', 'sans-serif'],
-        mono: ['Vazirmatn', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Vazirmatn', 'system-ui', 'sans-serif'],
+        mono: ['Vazirmatn', 'system-ui', 'sans-serif'],
+        display: ['Estedad', 'Vazirmatn', 'system-ui', 'sans-serif'],
       },
     },
   },

@@ -1,7 +1,9 @@
 import ScrollVideo from './components/ScrollVideo';
 import Navbar from './components/Navbar';
-import SectionOne from './components/SectionOne';
-import SectionTwo from './components/SectionTwo';
+import Hero from './components/Hero';
+import About from './components/About';
+import Work from './components/Work';
+import Contact from './components/Contact';
 
 export default function App() {
   return (
@@ -10,9 +12,13 @@ export default function App() {
       <div className="relative z-10">
         <Navbar />
         <main>
-          <SectionOne />
-          <div aria-hidden="true" className="h-[80vh]" />
-          <SectionTwo />
+          <Hero />
+          <div aria-hidden="true" className="h-[40vh]" />
+          <About />
+          <div aria-hidden="true" className="h-[30vh]" />
+          <Work />
+          <div aria-hidden="true" className="h-[30vh]" />
+          <Contact />
         </main>
       </div>
     </div>

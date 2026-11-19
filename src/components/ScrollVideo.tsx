@@ -230,6 +230,9 @@ export default function ScrollVideo() {
           framesReady ? 'opacity-100' : 'opacity-0'
         }`}
       />
+      {/* Subtle scrim for text contrast — gradient only, never an opaque block */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/20 to-black/50" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_35%,rgba(0,0,0,0.35)_100%)]" />
     </div>
   );
 }
