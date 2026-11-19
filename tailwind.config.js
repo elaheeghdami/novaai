@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        mono: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['Vazirmatn', 'Inter', 'system-ui', 'sans-serif'],
+        mono: ['Vazirmatn', 'Inter', 'system-ui', 'sans-serif'],
       },
     },
   },
