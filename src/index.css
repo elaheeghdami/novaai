@@ -40,3 +40,149 @@ body {
 .text-shadow-soft {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 30px rgba(0, 0, 0, 0.25);
 }
+
+
+@property --angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes cap-spin {
+  to {
+    --angle: 360deg;
+  }
+}
+
+@keyframes cap-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes cap-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.cap-grid {
+  animation: cap-in 0.5s ease both;
+}
+
+.cap-card {
+  perspective: 900px;
+}
+
+.cap-card-inner {
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.5s ease;
+}
+
+.cap-card-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--angle), transparent 35%, rgba(255, 255, 255, 0.7) 50%, transparent 65%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: cap-spin 8s linear infinite;
+  opacity: 0.35;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.cap-card:hover .cap-card-inner {
+  transform: rotateX(5deg) rotateY(-7deg) translateY(-6px);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.38);
+}
+
+.cap-card:hover .cap-card-inner::before {
+  opacity: 0.9;
+}
+
+.cap-glow {
+  position: absolute;
+  inset: auto -10% -30% -10%;
+  height: 55%;
+  background: radial-gradient(ellipse at center, rgba(125, 211, 252, 0.22), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+}
+
+.cap-card:hover .cap-glow {
+  opacity: 1;
+}
+
+.cap-float {
+  animation: cap-float 5.5s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.28s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cap-grid,
+  .cap-float,
+  .cap-card-inner,
+  .cap-card-inner::before,
+  .cap-glow {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .cap-card:hover .cap-card-inner {
+    transform: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .cap-card:hover .cap-card-inner {
+    transform: translateY(-3px);
+  }
+}
+
+#more-work,
+#order {
+  position: relative;
+}
+#more-work::before,
+#order::before {
+  content: '';
+  position: absolute;
+  inset: -2rem -1.25rem;
+  background: linear-gradient(180deg, rgba(10, 10, 10, 0.35), rgba(10, 10, 10, 0.18) 40%, rgba(10, 10, 10, 0.4));
+  pointer-events: none;
+  z-index: 0;
+  border-radius: 1.5rem;
+}
+#more-work > *,
+#order > * {
+  position: relative;
+  z-index: 1;
+}
+@media (min-width: 768px) {
+  #more-work::before,
+  #order::before {
+    inset: -2.5rem -2rem;
+  }
+}

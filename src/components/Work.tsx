@@ -1,8 +1,11 @@
+import { useMemo, useState } from 'react';
 import { ArrowUpLeft, ImagePlus } from 'lucide-react';
 import Reveal from './Reveal';
 import Badge from './Badge';
 import { Corners, ImageSlot } from './Frame';
 import { projects, statusLabels, type ProjectStatus } from '../data/projects';
+import { capabilities, categoryLabels, type Capability, type CapabilityCategory } from '../data/capabilities';
+import { requestSimilarProject } from '../lib/orderPrefill';
 
 const statusDot: Record<ProjectStatus, string> = {
   active: 'bg-emerald-300',
@@ -12,6 +15,12 @@ const statusDot: Record<ProjectStatus, string> = {
 };
 
 const num = (i: number) => String(i + 1).padStart(2, '0');
+
+const filters: Array<{ id: 'all' | CapabilityCategory; label: string }> = [
+  { id: 'all', label: 'همه' },
+  { id: 'health', label: categoryLabels.health },
+  { id: 'tech', label: categoryLabels.tech },
+];
 
 function ProjectPlaceholder({ path }: { path: string }) {
   return (
@@ -29,7 +38,54 @@ function ProjectPlaceholder({ path }: { path: string }) {
   );
 }
 
+function CapabilityCard({ item, index }: { item: Capability; index: number }) {
+  return (
+    <article className="cap-card" style={{ ['--i' as string]: index }}>
+      <div className="cap-card-inner rounded-2xl border border-white/20 bg-black/55 backdrop-blur-xl">
+        <div className="cap-glow" aria-hidden="true" />
+        <div className="relative">
+          <div className="cap-float">
+            <ImageSlot src={item.image} alt={item.imageAlt} className="aspect-[16/10] w-full rounded-t-2xl" placeholder={<ProjectPlaceholder path={item.image} />} />
+          </div>
+          <Corners />
+          <span className="absolute right-3 top-3 rounded-full border border-white/20 bg-black/40 px-2.5 py-1 text-[11px] text-white/90 backdrop-blur-md">
+            {categoryLabels[item.category]}
+          </span>
+        </div>
+        <div className="relative z-[1] px-4 pb-4 pt-4 sm:px-5">
+          <h3 className="font-display text-lg font-medium leading-7 text-white text-shadow-soft sm:text-xl sm:leading-8">
+            {item.title}
+          </h3>
+          <p className="mt-2 text-[13px] leading-7 text-white/80 sm:text-sm sm:leading-7">{item.description}</p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {item.tags.map((t) => (
+              <span key={t} className="rounded-full border border-white/15 bg-black/15 px-2.5 py-0.5 text-[11px] text-white/70">
+                {t}
+              </span>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => requestSimilarProject(item.title, item.orderType)}
+            className="group mt-4 inline-flex items-center gap-1 text-sm text-white/85 transition-colors duration-300 hover:text-white"
+          >
+            سفارش پروژه مشابه
+            <ArrowUpLeft size={15} className="transition-transform duration-300 group-hover:-translate-x-0.5" />
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export default function Work() {
+  const [filter, setFilter] = useState<'all' | CapabilityCategory>('all');
+  const visible = useMemo(
+    () => (filter === 'all' ? capabilities : capabilities.filter((item) => item.category === filter)),
+    [filter],
+  );
+  const showHealthNote = filter !== 'tech';
+
   return (
     <section id="work" className="scroll-mt-20 px-5 py-24 sm:px-8 md:px-12 md:py-32">
       <div className="flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
@@ -114,6 +170,65 @@ export default function Work() {
             </div>
           </article>
         ))}
+      </div>
+
+      <div id="more-work" className="mt-28 scroll-mt-24 border-t border-white/15 pt-16 md:mt-32 md:pt-20">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-2xl">
+            <Reveal delay={80}>
+              <Badge>بینایی ماشین</Badge>
+            </Reveal>
+            <Reveal delay={140}>
+              <h2 className="mt-6 font-display text-3xl font-medium leading-[1.4] text-white text-shadow-soft sm:text-4xl">
+                پروژه‌های تخصصی حوزهٔ سلامت و فناوری
+              </h2>
+            </Reveal>
+            <Reveal delay={200}>
+              <p className="mt-5 text-[15px] leading-8 text-white/85 text-shadow-soft sm:text-base">
+                مجموعه‌ای از سامانه‌های بینایی ماشین که در حوزه‌های سلامت، پزشکی، صنعت و فناوری طراحی و پیاده‌سازی
+                کرده‌ام. اگر به پروژه‌ای مشابه نیاز دارید، از دکمهٔ سفارش یا فرم ثبت سفارش استفاده کنید.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+
+        <Reveal delay={240}>
+          <div className="mt-8 flex flex-wrap gap-2" role="tablist" aria-label="فیلتر حوزهٔ پروژه‌ها">
+            {filters.map((chip) => {
+              const active = filter === chip.id;
+              return (
+                <button
+                  key={chip.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setFilter(chip.id)}
+                  className={`rounded-full border px-4 py-1.5 text-sm backdrop-blur-md transition-colors duration-300 ${
+                    active
+                      ? 'border-white/40 bg-white/20 text-white'
+                      : 'border-white/20 bg-black/35 text-white/80 hover:border-white/35 hover:text-white'
+                  }`}
+                >
+                  {chip.label}
+                </button>
+              );
+            })}
+          </div>
+        </Reveal>
+
+        {showHealthNote && (
+          <p className="mt-5 max-w-3xl text-xs leading-6 text-white/55">
+            پروژه‌های حوزهٔ سلامت در چارچوب پژوهش و ابزارهای کمکی تعریف می‌شوند و جایگزین تشخیص یا درمان بالینی نیستند.
+          </p>
+        )}
+
+        <div key={filter} className="cap-grid mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+          {visible.map((item, i) => (
+            <Reveal key={item.id} delay={Math.min(i * 70, 420)}>
+              <CapabilityCard item={item} index={i} />
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );

@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import About from './components/About';
 import Work from './components/Work';
+import Order from './components/Order';
 import Contact from './components/Contact';
 
 export default function App() {
@@ -17,7 +18,9 @@ export default function App() {
           <About />
           <div aria-hidden="true" className="h-[30vh]" />
           <Work />
-          <div aria-hidden="true" className="h-[30vh]" />
+          <div aria-hidden="true" className="h-[24vh]" />
+          <Order />
+          <div aria-hidden="true" className="h-[24vh]" />
           <Contact />
         </main>
       </div>

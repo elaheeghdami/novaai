@@ -8,6 +8,7 @@ const fa = (n: number) => n.toLocaleString('fa-IR');
 const links = [
   { label: 'درباره من', href: '#about' },
   { label: 'نمونه کارها', sup: fa(projects.length), href: '#work' },
+  { label: 'ثبت سفارش پروژه', href: '#order' },
   { label: 'تماس', href: '#contact' },
 ];
 
@@ -22,7 +23,7 @@ export default function Navbar() {
           </a>
         </Reveal>
 
-        <ul className="hidden items-center gap-9 md:flex lg:gap-11">
+        <ul className="hidden items-center gap-6 md:flex lg:gap-9">
           {links.map((link, i) => (
             <Reveal as="li" key={link.href} delay={100 + i * 100}>
               <a href={link.href} className="text-sm text-white/85 transition-colors duration-300 hover:text-white">
